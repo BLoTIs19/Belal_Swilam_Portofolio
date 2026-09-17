@@ -1,79 +1,75 @@
-# SHELF/64 — game portfolio template
+# Belal Swilam — Portfolio
 
-A static, framework-free portfolio for showing off game projects. No backend,
-no build step — just HTML, CSS and JS, so it drops straight into GitHub Pages.
+A static portfolio site: plain HTML, CSS and JS. No framework, no build
+step, no server. Designed to be hosted free on GitHub Pages.
 
 ## Files
 
 - `index.html` — page structure
 - `style.css` — all styling
-- `projects.js` — **your project data**. Add unlimited entries here.
-- `script.js` — renders the shelf, filters, and modals from `projects.js`
-- `assets/` — put your cover images and screenshots here
+- `data.js` — **all your content**: your bio text and every project
+- `script.js` — rendering, admin editing, export
+- `assets/` — your screenshots, GIFs and video files
 
-## Adding a project
+## The one thing to understand
 
-Open `projects.js` and add an object to the `PROJECTS` array — copy an
-existing entry as a starting point:
+GitHub Pages serves **static files only**. There is no database. So when
+you edit text or add a project in the browser, that change is saved in
+*your browser*, not on the internet — which is exactly why the projects
+you added before weren't showing up for other people.
 
-```js
-{
-  id: "your-game-id",
-  title: "Your Game",
-  year: "2026",
-  engine: "Unity",
-  tagline: "One sentence, shown on the card.",
-  description: "A longer paragraph, shown when someone opens the project.",
-  tags: ["genre", "solo dev"],
-  image: "assets/your-game/cover.png",
-  gallery: ["assets/your-game/1.png", "assets/your-game/2.png"],
-  playUrl: "https://yourname.itch.io/your-game",
-  codeUrl: "https://github.com/you/your-game"
-}
-```
+The fix is the **Export site data** button in the orange admin bar:
 
-There's no cap on how many objects you add — the grid, the filter chips,
-and the boot-text counter on the hero screen all read from this array.
+1. Log in, make all your changes (text edits, add/edit/delete projects).
+2. Click **Export site data** → **Download data.js**.
+3. In your GitHub repo, open `data.js` → pencil icon → select all →
+   paste the new contents → **Commit changes**.
+4. Wait about a minute. Your live site now shows the changes to everyone.
 
-The site also has a **+ button** in the bottom-right corner. Clicking it
-asks you to log in first (username `blotis`); once logged in it opens the
-add-project form. Submitting the form adds the project to your shelf right
-now (saved in this browser via local storage) and generates the exact code
-block above so you can paste it into `projects.js` to publish it for
-everyone.
+Until you do step 3, changes exist only on your machine.
 
-**About the admin login:** this is a static site with no server, so there's
-no way to build a real login system — the check happens entirely in the
-visitor's browser. It's stored as a password hash rather than plain text,
-which stops it from being trivially readable in "view source", but anyone
-comfortable with browser dev tools could still get past it. Treat it as a
-light deterrent for casual visitors, not real security. If you ever need
-real authentication (so *only you* can truly control the shelf), that
-requires a backend — happy to help set one up if you get there.
+## Admin
 
-To change the admin username or password, open `script.js` and edit
-`ADMIN_USERNAME`, then generate a new SHA-256 hash of your password (for
-example by running `echo -n "yourpassword" | shasum -a 256` in a terminal)
-and paste it into `ADMIN_PASSWORD_HASH`.
+- Username: `blotis`
+- Password: the one you chose (stored as a SHA-256 hash in `script.js`, not
+  as plain text)
 
-## Images
+To change it, edit `ADMIN_USERNAME` in `script.js` and replace
+`ADMIN_PASSWORD_HASH` with the hash of your new password
+(`echo -n "newpassword" | shasum -a 256`).
 
-Reference images either as a path inside `assets/` (recommended — commit
-them to the repo) or as a full URL to an image hosted elsewhere (itch.io,
-imgur, your own CDN). Both work identically.
+**This is not real security.** With no server, the check runs in the
+visitor's browser and someone using dev tools can bypass it. It stops
+casual tampering, nothing more. Nobody can change your *published* site
+without access to your GitHub account, though — that's what actually
+protects your content.
+
+## What you can do while logged in
+
+- **Edit any text** — click directly on your name, role, intro, summary,
+  about, or footer and type. Dashed orange outlines show what's editable.
+- **Add a project** — the green + button, bottom right.
+- **Edit or delete a project** — buttons appear on each card.
+- **Add media** — images, GIFs, `.mp4`/`.webm` videos, or YouTube links.
+  Paste a URL/path, or upload images straight from your computer.
+- **Discard local changes** — reverts to whatever is published in `data.js`.
+
+## Media tips
+
+- Screenshots and GIFs: commit to `assets/`, reference as `assets/name.gif`.
+- Videos: YouTube links are best — paste any YouTube URL and it embeds.
+  Self-hosted `.mp4` works too but bloats the repo.
+- Uploaded images get embedded into `data.js` as base64. Convenient, but
+  keep them small — files over 3 MB are rejected, and several large ones
+  will make your site slow to load.
 
 ## Publishing to GitHub Pages
 
-See the step-by-step instructions in the chat response, or:
+1. Create a repo and upload these files.
+2. Settings → Pages → Source: "Deploy from a branch" → `main` / `(root)`.
+3. Visit `https://<username>.github.io/<repo>/`.
 
-1. Create a new GitHub repository and push these files to it.
-2. In the repo, go to **Settings → Pages**.
-3. Under **Build and deployment**, set **Source** to "Deploy from a branch".
-4. Pick the `main` branch and the `/ (root)` folder, then **Save**.
-5. Wait a minute, then visit `https://<your-username>.github.io/<repo-name>/`.
+## Styling
 
-## Customizing the look
-
-Colors, fonts and spacing all live as CSS variables at the top of
-`style.css` (the `:root` block) — change those to reskin the whole site
-without touching layout code.
+Colors and fonts are CSS variables at the top of `style.css` (`:root`).
+Change those to reskin everything.
